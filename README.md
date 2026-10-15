@@ -1,34 +1,40 @@
-import numpy as np
-import matplotlib.pyplot as plt
+# Sensitivity of the Inverse-Square Law
+A Python simulation that shows how orbits change when the gravitational force law is slightly altered. It compares the real inverse-square law (n = 2) with a nearly identical one (n = 2.1).
 
-def get_path(n_power, steps=2000, dt=0.02):
-    # Initial conditions: Position [x, y], Velocity [vx, vy]
-    pos = np.array([1.0, 0.0])
-    vel = np.array([0.0, 0.8]) 
-    path = []
+## The idea
+Gravity pulls with a force proportional to 1/r^n. In our universe n = 2, and orbits close into stable ellipses. This project asks: what happens if n is only slightly different?
 
-    for _ in range(steps):
-        r_mag = np.linalg.norm(pos)
-        # The Force: F = G*M / r^(n+1) * vector_r (to get direction)
-        acc = -pos / r_mag**(n_power + 1) 
-        
-        vel += acc * dt
-        pos += vel * dt
-        path.append(pos.copy())
-        if r_mag > 5 or r_mag < 0.05: break # End if it escapes or crashes
-    return np.array(path)
+## What it does
+- Simulates an orbiting body around a central mass using numerical integration (semi-implicit Euler)
+- Runs two cases: n = 2.0 and n = 2.1
+- Plots both trajectories on the same graph with Matplotlib
 
-# Simulate two scenarios
-stable = get_path(2.0)    # n = 2 (The Real World)
-unstable = get_path(2.1)  # n = 2.1 (The Chaos World)
+## Results
+- **n = 2.0:** The orbit closes into a stable ellipse.
+- **n = 2.1:** The orbit no longer closes. It keeps a similar size but precesses, with its closest-approach point shifting by roughly 17 degrees each orbit.
 
-# Visualization
-plt.figure(figsize=(7, 7))
-plt.plot(stable[:, 0], stable[:, 1], label="n=2.0 (Stable Ellipse)", color="blue")
-plt.plot(unstable[:, 0], unstable[:, 1], label="n=2.1 (Unstable Spiral)", color="red", linestyle="--")
-plt.scatter(0, 0, color="orange", s=100, label="Sun") # The center of mass
-plt.legend()
-plt.title("The Sensitivity of Gravity's Exponent")
-plt.axis("equal")
-plt.grid(True, alpha=0.3)
-plt.show() 
+Even a 5% change in the exponent breaks the closed orbit, which shows how special the inverse-square law is.
+
+## Setup
+pip install numpy matplotlib
+
+## Usage
+Run the script. You can change the exponent in the calls near the bottom:
+
+stable = get_path(2.0)
+unstable = get_path(2.1)
+
+## Simulation parameters
+- Initial position: (1, 0), initial velocity: (0, 0.8)
+- Time step: 0.02, steps: 2000
+- Units where GM = 1
+- The simulation stops early if the body escapes (r > 5) or crashes (r < 0.05)
+
+## Limitations
+- Euler-type integration accumulates numerical error over long runs.
+- The simulation is 2D with a fixed central mass.
+
+## Future improvements
+- Use a higher-order integrator (Runge-Kutta or leapfrog)
+- Measure and plot the precession angle for a range of n values
+- Check energy and angular momentum conservation

@@ -20,12 +20,12 @@ def get_path(n_power, steps=2000, dt=0.02):
 
 # Simulate two scenarios
 stable = get_path(2.0)    # n = 2 (The Real World)
-unstable = get_path(2.1)  # n = 2.1 (The Chaos World)
+Precessing = get_path(2.1)  # n = 2.1 (The Chaos World)
 
 # Visualization
 plt.figure(figsize=(7, 7))
 plt.plot(stable[:, 0], stable[:, 1], label="n=2.0 (Stable Ellipse)", color="blue")
-plt.plot(unstable[:, 0], unstable[:, 1], label="n=2.1 (Unstable Spiral)", color="red", linestyle="--")
+plt.plot(unstable[:, 0], unstable[:, 1], label="n=2.1 (Precessing Orbit)", color="red", linestyle="--")
 plt.scatter(0, 0, color="orange", s=100, label="Sun") # The center of mass
 plt.legend()
 plt.title("The Sensitivity of Gravity's Exponent")
